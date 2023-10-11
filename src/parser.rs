@@ -14,10 +14,13 @@ fn parse(input : &str) -> IResult<&str,&str> {
     ))(input)
 }
 
-pub fn interpret(input : &str) -> Command {
-    let(command,prefix) = parse(input).unwrap();
-    match prefix {
-        "!" => imperial::interpret(command),
-        _ => panic!()
+pub fn interpret(input : &str) -> Option<Command> {
+    let output = parse(input);
+    match output {
+        Err(_) => None,
+        Ok((command,prefix)) => match prefix {
+                "!" => Some(imperial::interpret(command)),
+                _ => None
+            }
     }
 }
